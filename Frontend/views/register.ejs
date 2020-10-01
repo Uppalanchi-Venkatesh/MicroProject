@@ -4,18 +4,33 @@
         <%- include('./partials/header.ejs') %>
         <link rel="stylesheet" href="../CSS/login.css"> 
     </head> 
-    <body>
+    <body class="bg-secondary">
         <%- include('./page-partials/navbar.ejs') %>
-        <div id="form">
-        <form action="#">
-            <label for="fname">Username:</label><br>
-            <input type="text" id="fname" name="fname"><br><br>
-            <label for="email">E-mail:</label><br>
-            <input type="email" id="email" name="email"><br><br>
-            <label for="pass">Password:</label><br>
-            <input type="password" id="pass" name="Password" ><br><br>
-            <input type="submit" value="Submit">
-        </form> 
+        <div class="container">
+        <div class="row" style="margin-top: 70px;">
+            <div class="col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-sm-6 col-md-6 col-lg-6 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">
+                <form class="text-center border border-light p-5" action="#!">
+                    <p class="h4 mb-4">Sign Up</p>
+                    <input type="email" id="defaultLoginFormEmail" required="true" class="form-control mb-4" placeholder="E-mail">
+                    <input type="password" id="defaultLoginFormPassword" required="true" class="form-control mb-4" placeholder="Password">
+                    <input type="confirmpassword" id="defaultLoginFormPassword" required="true" class="form-control mb-4" placeholder="Confirm Password">
+                    <div class="d-flex justify-content-around">
+                        <div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
+                                <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
+                            </div>
+                        </div>
+                        <div>
+                            <p><a href="">Forgot password?</a></p>
+                        </div>
+                    </div>
+                    <button class="btn btn-info btn-block my-4" type="submit">Sign in</button>
+                    <p>Not a member?<a href="/register">Register</a></p>
+                </form>
+            </div>
         </div>
+        </div>
+        <%- include('./partials/footer.ejs') %>
     </body>
 </html>
