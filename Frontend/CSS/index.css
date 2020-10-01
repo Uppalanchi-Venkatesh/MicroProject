@@ -1,28 +1,8 @@
-body{
-    background-color: seashell;
-}
-
-#carouselExampleControls{
-    width: 500px;
-    height: 150px;
-    margin-left: 30%;
-}
-
-#book{
-    width: 200px;
-    height:90px;
-    border: 2px solid black;
-    box-shadow: limegreen ;
-    background-color: seashell;
-    text-align: center;
-    margin-left: 80%;
-}
-
-#but{
-    background-color: lightsteelblue;
-    padding-left: 5px; 
-}
-
-#tit{
-    margin: 5px;
-}
+#header{
+    padding-top:130px;
+    background:linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://www.reading-room.ro/img/hero_stock.jpg');
+    background-size: 100%;
+    height:558px;
+    color:white;
+  }
+  

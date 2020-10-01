@@ -22,20 +22,8 @@ app.get('/register',(req,res)=>{
     res.render('register');
 });
 
-app.get('/sample',(req,res)=>{
-    res.render('sample');
-});
-
-app.get('/edit',(req,res)=>{
-    res.render('edit');
-});
-
-app.get('/resource',(req,res)=>{
-    res.render('resource');
-});
-
-app.get('/single',(req,res)=>{
-    res.render('single');
+app.get('/about',(req,res)=>{
+    res.render('about');
 });
 
 app.listen(port,()=>{
