@@ -9,10 +9,18 @@
         <div class="container">
         <div class="row" style="margin-top: 100px;">
             <div class="col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-sm-6 col-md-6 col-lg-6 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">
-                <form class="text-center border border-light p-5" action="#!">
+                <form class="text-center border border-light p-5" action="/login" method="POST">   
                     <p class="h4 mb-4">Sign in</p>
-                    <input type="email" id="defaultLoginFormEmail" required="true" class="form-control mb-4" placeholder="E-mail">
-                    <input type="password" id="defaultLoginFormPassword" required="true" class="form-control mb-4" placeholder="Password">
+                    <% if (messages.length>0) { %>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="background-color: red !important;">
+                                <%= messages %>
+                                <span aria-hidden="true">&times;</span>
+                            </button> 
+                        </div>
+                    <% } %>
+                    <input type="email" id="defaultLoginFormEmail" required name="email" class="form-control mb-4" placeholder="E-mail">
+                    <input type="password" id="defaultLoginFormPassword" required name="password" class="form-control mb-4" placeholder="Password">
                     <div class="d-flex justify-content-around">
                         <div>
                             <div class="custom-control custom-checkbox">
@@ -21,12 +29,13 @@
                             </div>
                         </div>
                         <div>
-                            <p><a href="">Forgot password?</a></p>
+                            <p><a href="" style="color: red;">Forgot password?</a></p>
                         </div>
                     </div>
                     <button class="btn btn-info btn-block my-4" type="submit">Sign in</button>
-                    <p>Not a member?<a href="/register">Register</a></p>
+                    <p><b> Not a member?</b><a href="/register" style="color: red;">   Register</a></p>
                 </form>
+               
             </div>
         </div>
         </div>

@@ -1,8 +1,8 @@
 #header{
     padding-top:130px;
-    background:linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://www.reading-room.ro/img/hero_stock.jpg');
+    background:linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../views/Images/home_background.jpg');
     background-size: 100%;
     height:558px;
     color:white;
-  }
+}
   
