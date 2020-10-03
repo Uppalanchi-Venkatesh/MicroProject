@@ -27,23 +27,46 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'Frontend')));
 
 app.get('/',(req,res)=>{
-    res.render('index');
+    res.render('index',{title: 'The reading Room'});
 });
 
-app.get('/login',(req,res)=>{
-    res.render('login');
+// app.get('/login',(req,res)=>{
+//     res.render('login', {title:'The Reading Room', messages: ' '});
+// });
+
+app.get("/login",(req,res)=>{
+    if(req.user)
+      return res.redirect('/dashboard');
+    res.render('login',{title:'The Reading Room',messages:'', user: req.user});
 });
 
-app.get('/register',(req,res)=>{
-    res.render('register');
+app.get("/register",(req,res)=>{
+    if(req.user)
+      return res.redirect('/dashboard');
+    res.render('register',{title:'The Reading Room', user: req.user});
 });
+
+app.get('/logout', (req, res)=>{
+    //sessionLib.destroySession(req, function(err, result){
+    return res.redirect('/login');
+    //})
+})
+
+// app.get('/register',(req,res)=>{
+//     res.render('register');
+// });
 
 app.get('/about',(req,res)=>{
-    res.render('about');
+    res.render('about',{title: 'The Reading Room'});
 });
 
-app.get('/dashboard',(req,res)=>{
-    res.render('dashboard');
+// app.get('/dashboard',(req,res)=>{
+//     res.render('dashboard');
+// });
+
+app.get('/dashboard', function(req, res) {
+    res.locals.query  = req.query;
+    res.render('dashboard',{title:'dashboard', user: req.user})
 });
 
 // router.post('/verifyemail', (req, res)=>{
@@ -92,18 +115,18 @@ app.get('/getregisteruser',function(req,res){
 
 app.post('/login', (req, res)=>{
     if(!req.body.email || req.body.email.length == 0)
-        return res.render('login',{title:'The Reading Room',messages:'Blank Email Not Allowed'});
+        return res.render('login',{title:'The Reading Room',messages:'Blank Email Not Allowed', user: req.user});
     var query = {email: req.body.email};
     userModel.getSingleItemByQuery(query, model, function(err, dbUser){
         if(err || !dbUser)
-            return res.render('login',{title:'The Reading Room',messages:'Sorry! Invalid Email'});
+            return res.render('login',{title:'The Reading Room',messages:'Sorry! Invalid Email', user: req.user});
         var frontendSentPassword = req.body.password;
         bcrypt.compare(frontendSentPassword, dbUser.password, function(err, cmpResult){
             if(cmpResult)
-                return res.redirect("/dashboard");
+                return res.render('dashboard',{title:'Dashboard', user: req.body.email});
             else
                 //return res.redirect("/register");
-                return res.render('login',{title:'The Reading Room', messages:'Sorry! Invalid Password'});
+                return res.render('login',{title:'The Reading Room', messages:'Sorry! Invalid Password', user: req.user});
         })
     })
 })
