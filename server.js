@@ -7,7 +7,8 @@ var userModel = require('./Backend/Libs/userlib');
 var model = require("./Backend/Models/usermodel");
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
-var session = require('express-session')
+var session = require('express-session');
+var sessionStorage = require('sessionstorage');
 var port = process.env.PORT || 8000;
 
 db.connect();
@@ -30,57 +31,49 @@ app.get('/',(req,res)=>{
     res.render('index',{title: 'The reading Room'});
 });
 
-// app.get('/login',(req,res)=>{
-//     res.render('login', {title:'The Reading Room', messages: ' '});
-// });
-
 app.get("/login",(req,res)=>{
-    if(req.user)
-      return res.redirect('/dashboard');
+    if(sessionStorage.getItem('user'))
+        return res.redirect('/dashboard');
     res.render('login',{title:'The Reading Room',messages:'', user: req.user});
 });
 
 app.get("/register",(req,res)=>{
-    if(req.user)
-      return res.redirect('/dashboard');
+    if(sessionStorage.getItem('user'))
+        return res.redirect('/dashboard');
     res.render('register',{title:'The Reading Room', user: req.user});
 });
 
 app.get('/logout', (req, res)=>{
     //sessionLib.destroySession(req, function(err, result){
-    return res.redirect('/login');
     //})
-})
-
-// app.get('/register',(req,res)=>{
-//     res.render('register');
-// });
+    sessionStorage.clear();
+    return res.redirect('/login');
+});
 
 app.get('/about',(req,res)=>{
     res.render('about',{title: 'The Reading Room'});
 });
 
-// app.get('/dashboard',(req,res)=>{
-//     res.render('dashboard');
-// });
-
 app.get('/dashboard', function(req, res) {
-    res.locals.query  = req.query;
-    res.render('dashboard',{title:'dashboard', user: req.user})
+    //res.locals.query  = req.query;
+    if(sessionStorage.getItem('user'))
+        return res.render('dashboard',{title:'Dashboard', user: sessionStorage.getItem('user')});
+    //res.render('dashboard',{title:'Dashboard', user: req.user});
+    return res.redirect('/login');
 });
 
-// router.post('/verifyemail', (req, res)=>{
-//     if(!req.body.email || req.body.email.length == 0)
-//         return res.json({message: 'Blank email is not allowed'});
-//     var query = {email: req.body.email};
-//     itemLib.getSingleItemByQuery(query, userModel, function(err, dbUser){
-//         if(err || dbUser)
-//             return res.json({message: 'found'});
-//         return res.json({message: ''});
-//     })
-// })
+/*router.post('/verifyemail', (req, res)=>{
+    if(!req.body.email || req.body.email.length == 0)
+        return res.json({message: 'Blank email is not allowed'});
+    var query = {email: req.body.email};
+    itemLib.getSingleItemByQuery(query, userModel, function(err, dbUser){
+        if(err || dbUser)
+            return res.json({message: 'found'});
+        return res.json({message: ''});
+    })
+})
 
-/*router.post('/register', (req, res)=>{
+router.post('/register', (req, res)=>{
     // HASH THE PASSWORD BEFORE SAVING
     req.body.password = bcrypt.hashSync(req.body.password, config.bcrypt_salt_rounds);
     itemLib.createitem(req.body, userModel, function(err, savedUserObj){
@@ -88,21 +81,7 @@ app.get('/dashboard', function(req, res) {
             return res.redirect('/register');
         return res.redirect('/login');
     })
-})*/
-
-app.post('/register',async function(req,res){
-    try{
-        var hashedPassword = await bcrypt.hash(req.body.password , 10);
-        req.body.password = hashedPassword;
-        userModel.createUser(req.body);
-        //console.log(req.body.email);
-        res.redirect('/login');
-    }catch{
-        res.redirect('/register');
-    }
-    /*RegisterUserLib.createUsers(req.body);
-    //res.send("user registered sucessfully");*/
-})
+});
 
 app.get('/getregisteruser',function(req,res){
     userModel.getAllUsers(function(err,result){
@@ -111,7 +90,18 @@ app.get('/getregisteruser',function(req,res){
         else
             res.json(result);
     })
-})
+});*/
+
+app.post('/register',async function(req,res){
+    try{
+        var hashedPassword = await bcrypt.hash(req.body.password , 10);
+        req.body.password = hashedPassword;
+        userModel.createUser(req.body);
+        res.redirect('/login');
+    }catch{
+        res.redirect('/register');
+    }
+});
 
 app.post('/login', (req, res)=>{
     if(!req.body.email || req.body.email.length == 0)
@@ -123,13 +113,20 @@ app.post('/login', (req, res)=>{
         var frontendSentPassword = req.body.password;
         bcrypt.compare(frontendSentPassword, dbUser.password, function(err, cmpResult){
             if(cmpResult)
-                return res.render('dashboard',{title:'Dashboard', user: req.body.email});
+            {
+                sessionStorage.setItem('user',req.body.email);
+                return res.redirect('/dashboard');
+            }
             else
                 //return res.redirect("/register");
                 return res.render('login',{title:'The Reading Room', messages:'Sorry! Invalid Password', user: req.user});
         })
     })
-})
+});
+
+// function authUser(req,res,next){
+
+// }
 
 //db.disconnect();
 
