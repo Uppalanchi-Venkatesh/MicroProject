@@ -9,9 +9,13 @@ var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var sessionStorage = require('sessionstorage');
+var LocalStorage = require('node-localstorage').LocalStorage;
+var localStorage = new LocalStorage('./scratch');
+var mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
 var port = process.env.PORT || 8000;
 
-db.connect();
+db.connect(true);
 
 app.set('views', path.join(__dirname, 'Frontend', 'views'));
 app.set('view engine', 'ejs');
@@ -22,9 +26,16 @@ app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie:{
+        maxAge: 10000,
+        expires: 60*60,
+        httpOnly: true
+    }
 }));
 app.use(flash());
 app.use(cookieParser());
+//app.use(sessionLib.populateSessionUser);
 app.use(express.static(path.join(__dirname, 'Frontend')));
 
 app.get('/',(req,res)=>{
@@ -32,21 +43,22 @@ app.get('/',(req,res)=>{
 });
 
 app.get("/login",(req,res)=>{
-    if(sessionStorage.getItem('user'))
+    if(localStorage.getItem('user'))
         return res.redirect('/dashboard');
     res.render('login',{title:'The Reading Room',messages:'', user: req.user});
 });
 
 app.get("/register",(req,res)=>{
-    if(sessionStorage.getItem('user'))
+    if(localStorage.getItem('user'))
         return res.redirect('/dashboard');
     res.render('register',{title:'The Reading Room', user: req.user});
 });
 
 app.get('/logout', (req, res)=>{
-    //sessionLib.destroySession(req, function(err, result){
-    //})
-    sessionStorage.clear();
+    // sessionLib.destroySession(req, function(err, result){
+    //     return res.redirect('/login');
+    // });
+    localStorage.removeItem('user');
     return res.redirect('/login');
 });
 
@@ -55,9 +67,10 @@ app.get('/about',(req,res)=>{
 });
 
 app.get('/dashboard', function(req, res) {
-    //res.locals.query  = req.query;
-    if(sessionStorage.getItem('user'))
-        return res.render('dashboard',{title:'Dashboard', user: sessionStorage.getItem('user')});
+    //res.locals.query = req.query;
+    //console.log("REQ.QUERY"+req.query);
+    if(localStorage.getItem('user'))
+        return res.render('dashboard',{title:'Dashboard', user: localStorage.getItem('user')});//localStorage.getItem('user')
     //res.render('dashboard',{title:'Dashboard', user: req.user});
     return res.redirect('/login');
 });
@@ -114,7 +127,10 @@ app.post('/login', (req, res)=>{
         bcrypt.compare(frontendSentPassword, dbUser.password, function(err, cmpResult){
             if(cmpResult)
             {
-                sessionStorage.setItem('user',req.body.email);
+                // sessionLib.setSessionUser(req, dbUser, function(err, result){
+                //     return res.redirect('/dashboard');
+                // });
+                localStorage.setItem('user',req.body.email);
                 return res.redirect('/dashboard');
             }
             else
