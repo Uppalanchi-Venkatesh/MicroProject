@@ -13,6 +13,7 @@ var LocalStorage = require('node-localstorage').LocalStorage;
 var localStorage = new LocalStorage('./scratch');
 var mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
+var sessionLib = require('./Backend/Libs/sessionLib');
 var port = process.env.PORT || 8000;
 
 db.connect(true);
@@ -26,16 +27,11 @@ app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    cookie:{
-        maxAge: 10000,
-        expires: 60*60,
-        httpOnly: true
-    }
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 app.use(flash());
 app.use(cookieParser());
-//app.use(sessionLib.populateSessionUser);
+app.use(sessionLib.populateSessionUser);
 app.use(express.static(path.join(__dirname, 'Frontend')));
 
 app.get('/',(req,res)=>{
@@ -43,23 +39,23 @@ app.get('/',(req,res)=>{
 });
 
 app.get("/login",(req,res)=>{
-    if(localStorage.getItem('user'))
+    if(req.user)        //if(localStorage.getItem('user'))
         return res.redirect('/dashboard');
     res.render('login',{title:'The Reading Room',messages:'', user: req.user});
 });
 
 app.get("/register",(req,res)=>{
-    if(localStorage.getItem('user'))
+    if(req.user)        //if(localStorage.getItem('user'))
         return res.redirect('/dashboard');
     res.render('register',{title:'The Reading Room', user: req.user});
 });
 
 app.get('/logout', (req, res)=>{
-    // sessionLib.destroySession(req, function(err, result){
-    //     return res.redirect('/login');
-    // });
-    localStorage.removeItem('user');
-    return res.redirect('/login');
+    sessionLib.destroySession(req, function(err, result){
+        return res.redirect('/login');
+    });
+    // localStorage.removeItem('user');
+    // return res.redirect('/login');
 });
 
 app.get('/about',(req,res)=>{
@@ -67,11 +63,10 @@ app.get('/about',(req,res)=>{
 });
 
 app.get('/dashboard', function(req, res) {
-    //res.locals.query = req.query;
-    //console.log("REQ.QUERY"+req.query);
-    if(localStorage.getItem('user'))
-        return res.render('dashboard',{title:'Dashboard', user: localStorage.getItem('user')});//localStorage.getItem('user')
-    //res.render('dashboard',{title:'Dashboard', user: req.user});
+    // res.locals.query = req.query;
+    // console.log("REQ.QUERY : "+JSON.stringify(req.query));
+    if(req.user)        //if(localStorage.getItem('user'))
+        return res.render('dashboard',{title:'Dashboard', user: req.user.email});//localStorage.getItem('user')
     return res.redirect('/login');
 });
 
@@ -128,22 +123,18 @@ app.post('/login', (req, res)=>{
         bcrypt.compare(frontendSentPassword, dbUser.password, function(err, cmpResult){
             if(cmpResult)
             {
-                // sessionLib.setSessionUser(req, dbUser, function(err, result){
-                //     return res.redirect('/dashboard');
-                // });
-                localStorage.setItem('user',req.body.email);
-                return res.redirect('/dashboard');
+                sessionLib.setSessionUser(req, dbUser, function(err, result){
+                    //console.log("USER : "+JSON.stringify(dbUser));
+                    return res.redirect('/dashboard');
+                });
+                //localStorage.setItem('user',req.body.email);
+                //return res.redirect('/dashboard');
             }
             else
-                //return res.redirect("/register");
                 return res.render('login',{title:'The Reading Room', messages:'Sorry! Invalid Password', user: req.user});
         })
     })
 });
-
-// function authUser(req,res,next){
-
-// }
 
 //db.disconnect();
 
