@@ -1,4 +1,4 @@
-/*var model=require("../Models/usermodel");
+var model=require("../Models/usermodel");
 
 module.exports={
     createUser: function(userObj){
@@ -18,9 +18,9 @@ module.exports={
             cb(err, singleItem);
         })
     }
-}*/
+}
 
-exports.getAllUsers = function (itemModel, cb) {
+/*exports.getAllUsers = function (itemModel, cb) {
     console.log('Getting All Items');
     var query = {}; // get all
     itemModel.find(query, function (err, allDBItems) {
@@ -105,7 +105,7 @@ exports.getSingleItemByQueryAndSortedOnField = function(query, fieldName, itemMo
 }
 
 exports.createUser = function (itemDetails, itemModel, cb) {
-    console.log('Create New item for ' + JSON.stringify(itemDetails));
+    //console.log('Create New item for ' + JSON.stringify(itemDetails));
     var ti = new itemModel(itemDetails);
     ti.save(function (err) {
         if(err)
@@ -143,22 +143,22 @@ exports.updateItem = function (itemDetails, itemModel, cb) {
 exports.deleteItem = function (id, softDelete, itemModel, cb) {
     console.log('Delete Resource ' + id);
     cb(null, null); // Disabled Delete
-    /*
-    if(!softDelete){
-        itemModel.findByIdAndDelete(id, cb);
-    }
-    else{
-        itemModel.findById(id, function (err, qObj) {
-            if (err)
-                cb(err, null);
-            else {
-                qObj.isDeleted = true;
-                // Save Updated Statement
-                qObj.save(function (err) {
-                    cb(err, qObj);
-                });
-            }
-        });
-    }
-    */
-};
+    
+    // if(!softDelete){
+    //     itemModel.findByIdAndDelete(id, cb);
+    // }
+    // else{
+    //     itemModel.findById(id, function (err, qObj) {
+    //         if (err)
+    //             cb(err, null);
+    //         else {
+    //             qObj.isDeleted = true;
+    //             // Save Updated Statement
+    //             qObj.save(function (err) {
+    //                 cb(err, qObj);
+    //             });
+    //         }
+    //     });
+    // }
+    
+};*/

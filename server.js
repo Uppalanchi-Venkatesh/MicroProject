@@ -109,6 +109,7 @@ app.post('/register',async function(req,res){
     try{
         var hashedPassword = await bcrypt.hash(req.body.password , 10);
         req.body.password = hashedPassword;
+        //console.log(JSON.stringify(req.body));
         userModel.createUser(req.body);
         res.redirect('/login');
     }catch{
