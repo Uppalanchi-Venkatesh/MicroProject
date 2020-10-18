@@ -66,7 +66,7 @@ app.get('/dashboard', function(req, res) {
     // res.locals.query = req.query;
     // console.log("REQ.QUERY : "+JSON.stringify(req.query));
     if(req.user)        //if(localStorage.getItem('user'))
-        return res.render('dashboard',{title:'Dashboard', user: req.user.email});//localStorage.getItem('user')
+        return res.render('dashboard',{title:'Dashboard',messages: 'Successful', user: req.user.email});//localStorage.getItem('user')
     return res.redirect('/login');
 });
 
