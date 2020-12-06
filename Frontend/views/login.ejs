@@ -12,7 +12,7 @@
                 <form class="text-center border border-light p-5" action="/auth/login" method="POST">   
                     <p class="h4 mb-4" style="color: black;">Sign in</p>
                     <% if (messages.length>0) { %>
-                        <h3><%= messages %></h3> 
+                        <h3 style="color: black"><%= messages %></h3> 
                     <% } %>
                     <input type="email" id="defaultLoginFormEmail" required name="email" class="form-control mb-4" placeholder="E-mail">
                     <input type="password" id="defaultLoginFormPassword" required name="password" class="form-control mb-4" placeholder="Password">
