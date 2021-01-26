@@ -162,21 +162,21 @@ exports.deleteItem = function (id, softDelete, itemModel, cb) {
     console.log('Delete Resource ' + id);
     cb(null, null); // Disabled Delete
     
-    // if(!softDelete){
-    //     itemModel.findByIdAndDelete(id, cb);
-    // }
-    // else{
-    //     itemModel.findById(id, function (err, qObj) {
-    //         if (err)
-    //             cb(err, null);
-    //         else {
-    //             qObj.isDeleted = true;
-    //             // Save Updated Statement
-    //             qObj.save(function (err) {
-    //                 cb(err, qObj);
-    //             });
-    //         }
-    //     });
-    // }
+    if(!softDelete){
+        itemModel.findByIdAndDelete(id, cb);
+    }
+    else{
+        itemModel.findById(id, function (err, qObj) {
+            if (err)
+                cb(err, null);
+            else {
+                qObj.isDeleted = true;
+                // Save Updated Statement
+                qObj.save(function (err) {
+                    cb(err, qObj);
+                });
+            }
+        });
+    }
     
 };*/

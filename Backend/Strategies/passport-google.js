@@ -11,9 +11,10 @@ passport.serializeUser((user, done)=> {
 passport.deserializeUser((id , done)=> {
     var query = {_id : id};
     userLib.getItemById(query, model, (err, dbUser)=>{
+        //console.log("USER : "+ JSON.stringify(dbUser));
         if(err)
             return done(err,dbUser);
-        return done(null,dbUser);
+        return done(null,dbUser.email);
     });
 });
 
@@ -37,7 +38,7 @@ var verifyCallback = (accessToken, refreshToken, profile, done) =>{
     //console.log("Profile : "+JSON.stringify(profile));
     //console.log("Email : "+ JSON.stringify(profile.emails[0].value));
     var query = {email : profile.emails[0].value};
-    userLib.getSingleItemByQuery(query, model, (err, user)=>{
+    userLib.getSingleItemByQuery(query, model, (err, user)=> {
         if(err) {
             errors1[0]=err;
             return done(err);
@@ -46,6 +47,7 @@ var verifyCallback = (accessToken, refreshToken, profile, done) =>{
             errors1[0]='No user with that email !';
             return done(null, false);
         }
+        //console.log("Profile : "+JSON.stringify(user));
         return done(null, user);
     });
 }

@@ -3,7 +3,7 @@ var itemLib = require('./userlib');
 
 module.exports.populateSessionUser = function(req, res, next) {
     module.exports.getSessionUser(req, function(err, user) {
-        //console.log("ERROR: "+ JSON.stringify(user));
+        //console.log("USER: "+ JSON.stringify(user));
         req.user = user;
         next();
     })

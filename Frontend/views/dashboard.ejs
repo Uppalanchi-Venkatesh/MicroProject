@@ -1,8 +1,18 @@
-<%- include('./partials/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/header.ejs') %>
+    <link rel="stylesheet" href="../CSS/index.css">
+</head>
+<body style="background-color: #D5D6D8;">
+    <%- include('./page-partials/navbar.ejs') %>
 
-<% if(user) { %>
-    <h1>Welcome <%= user %> </h1>
-<% } %>
-<br>
-<h4><a href="/logout">Logout</a></h4>
-<%- include('./partials/footer.ejs') %>
+    <% if(user.length>0) { %>
+        <h1>Welcome <%= user %> </h1>
+    <% } %>
+    <br>
+    <h4><a href="/logout">Logout</a></h4>
+
+    <%- include('./partials/footer.ejs') %>
+</body>
+</html>

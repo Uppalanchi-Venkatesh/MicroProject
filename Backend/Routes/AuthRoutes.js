@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var bcrypt = require('bcrypt');
-var userModel = require('../Libs/userlib');
+var userLib = require('../Libs/userlib');
 var sessionLib = require('../Libs/sessionLib');
 var model = require("../Models/usermodel");
 //var localStorage = new LocalStorage('./scratch');
@@ -14,9 +14,9 @@ router.post('/auth/login', (req, res)=> {
     if(!req.body.email || req.body.email.length == 0)
         return res.render('login',{title:'The Reading Room',messages:'Blank Email Not Allowed', user: req.user});
     var query = {email: req.body.email};
-    userModel.getSingleItemByQuery(query, model, function(err, dbUser) {
+    userLib.getSingleItemByQuery(query, model, function(err, dbUser) {
         if(err || !dbUser)
-            return res.render('login',{title:'The Reading Room',messages:'Sorry! Invalid Email', user: req.user});
+            return res.render('login',{title:'The Reading Room',messages:'No user with that email !', user: req.user});
         var frontendSentPassword = req.body.password;
         bcrypt.compare(frontendSentPassword, dbUser.password, function(err, cmpResult) { 
             if(cmpResult) {
