@@ -6,13 +6,17 @@
 </head>
 <body style="background-color: #D5D6D8;">
     <%- include('./page-partials/navbar.ejs') %>
-
-    <% if(user.length>0) { %>
-        <h1>Welcome <%= user %> </h1>
-    <% } %>
-    <br>
-    <h4><a href="/logout">Logout</a></h4>
-
+    <div class="fluid-container">
+        <div class="row">
+            <div class="col col-xs-12 col-lg-12 col-sm-12 col-md-12">
+                <% if(user.length>0) { %>
+                    <h1>Welcome <%= user %> </h1>
+                <% } %>
+                <br>
+                <h4><a href="/logout">Logout</a></h4>
+            </div>
+        </div>
+    </div>
     <%- include('./partials/footer.ejs') %>
 </body>
 </html>
