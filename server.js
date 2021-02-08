@@ -10,9 +10,9 @@ var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
-var LocalStorage = require('node-localstorage').LocalStorage;
-var localStorage = new LocalStorage('./scratch');
-var sessionStorage = require('sessionstorage');
+//var LocalStorage = require('node-localstorage').LocalStorage;
+//var localStorage = new LocalStorage('./scratch');
+//var sessionStorage = require('sessionstorage');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
 var sessionLib = require('./Backend/Libs/sessionLib');
@@ -29,7 +29,7 @@ app.set('views', path.join(__dirname, 'Frontend', 'views'));
 app.set('view engine', 'ejs');
 
 app.use(express.json());
-//app.use(cors());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -46,14 +46,10 @@ app.use(express.static(path.join(__dirname, 'Frontend')));
 app.use(AuthRoutes);
 
 app.get('/',(req,res)=> {
-    if(req.user)        
-        return res.redirect('/dashboard');
     res.render('index',{title: 'The reading Room', user: req.user});
 });
 
 app.get("/login",(req,res)=> {
-    if(req.user)        //if(localStorage.getItem('user'))
-        return res.redirect('/dashboard');
     str1="";
     if(errors1.length>0 && errors1[0]!=="") {
         str1=errors1[0];
@@ -65,12 +61,6 @@ app.get("/login",(req,res)=> {
     }
     res.render('login',{title : 'The Reading Room',messages : str1, user : req.user});
 });
-
-/*app.get("/register",(req,res)=> {
-    if(req.user)        //if(localStorage.getItem('user'))
-        return res.redirect('/dashboard');
-    res.render('register',{title:'The Reading Room', user: req.user});
-});*/
 
 app.get('/register', (req,res) =>{
     str3="";
@@ -89,15 +79,7 @@ app.get('/seat',(req,res)=> {
     res.render('seat',{title: 'The Reading Room', user: req.user});
 });
 
-app.get('/dashboard', function(req, res) {
-    // res.locals.query = req.query;
-    //console.log("REQ.QUERY : "+ req.user);
-    if(req.user)        //if(localStorage.getItem('user'))
-        return res.render('dashboard',{title:'Dashboard',messages: 'Successful', user: req.user});//localStorage.getItem('user')
-    return res.redirect('/login');
-});
-
-app.post('/register', (req,res) =>{
+app.post('/register', async(req,res) =>{
     try {
         var query = {email : req.body.email};
         userLib.getSingleItemByQuery(query, model, async function(err, dbUser){
@@ -117,18 +99,6 @@ app.post('/register', (req,res) =>{
         res.redirect('/register');
     }
 });
-
-/*app.post('/register',async function(req,res) {
-    try {
-        var hashedPassword = await bcrypt.hashSync(req.body.password , 10);
-        req.body.password = hashedPassword;
-        //console.log(JSON.stringify(req.body));
-        userLib.createUser(req.body);
-        res.redirect('/login');
-    } catch {
-        res.redirect('/register');
-    }
-});*/
 
 app.get('/logout', (req, res)=> {
     sessionLib.destroySession(req, function(err, result){

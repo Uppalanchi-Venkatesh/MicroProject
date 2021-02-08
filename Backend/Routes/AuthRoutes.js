@@ -22,7 +22,7 @@ router.post('/auth/login', (req, res)=> {
             if(cmpResult) {
                 sessionLib.setSessionUser(req, dbUser, function(err, result) {
                     //console.log("USER : "+JSON.stringify(dbUser));
-                    return res.redirect('/dashboard');
+                    return res.redirect('/');
                 });
                 //localStorage.setItem('user',req.body.email);
                 //return res.redirect('/dashboard');
@@ -51,7 +51,7 @@ router.get('/auth/google',
 
 router.get(GoogleURL, 
     passport.authenticate('google', {
-        successRedirect : '/dashboard',
+        successRedirect : '/',
         failureRedirect: '/login', 
         failureFlash: true
 }));
@@ -62,7 +62,7 @@ router.get('/auth/facebook',
 
 router.get(FacebookURL,
     passport.authenticate('facebook', { 
-        successRedirect : '/dashboard',
+        successRedirect : '/',
         failureRedirect: '/login',
         failureFlash : true 
 }));
