@@ -35,8 +35,8 @@ $(document).ready(function () {
     $('#Selectseat').unbind('click').bind('click', function () {
         if ($('#Seats').val() != '' || $('#Seats').val() != 0) {
             var table = document.getElementById("seatTable");
-            for (var i = 1, row; row = table.rows[i]; i++) {
-                for (var j = 1, col; col = row.cells[j]; j++) {
+            for (let i = 1, row; row = table.rows[i]; i++) {
+                for (let j = 1, col; col = row.cells[j]; j++) {
                     if (col.firstChild != null)
                     {
                         var ClassName = col.firstChild.className;

@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -21,7 +22,6 @@ var errors1 = require('./Backend/Strategies/passport-google').errors1;
 var errors2 = require('./Backend/Strategies/passport-facebook').errors2;
 var port = process.env.PORT || 8000;
 var str1="",str2="",str3="";
-require('dotenv').config();
 
 db.connect(process.env.CONNECTION_STRING, true);
 
@@ -82,10 +82,9 @@ app.get('/seat',(req,res)=> {
 app.post('/register', async(req,res) =>{
     try {
         var query = {email : req.body.email};
-        userLib.getSingleItemByQuery(query, model, async function(err, dbUser){
+        userLib.getSingleItemByQuery(query, model, async function(err, dbUser) {
             if(dbUser) {
                 str2='This email already taken !';
-                flag=1;
                 return res.redirect('/register');
             } else {
                 req.body.password = await bcrypt.hashSync(req.body.password, parseInt(process.env.SALT_ROUNDS));
